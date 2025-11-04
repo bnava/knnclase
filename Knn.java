@@ -11,6 +11,7 @@ public class Knn {
         static class Punto {
             double largo, ancho;
             String tipo;
+            String vacio;
             Punto(double l, double a, String t) { largo = l; ancho = a; tipo = t; }
         }
 
