@@ -1,0 +1,63 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report
+
+#  LECTURA DEL ARCHIVO 
+ruta = "dataset_flores_ruido.xlsx"
+k = 5  # número de vecinos
+
+try:
+    datos = pd.read_excel(ruta)
+    print(f"Archivo leído correctamente: {"dataset_flores_ruido.xlsx}")
+except FileNotFoundError:
+    print(f" No se encontró el archivo {"dataset_flores_ruido.xlsx}. Verifica la ruta o el nombre.")
+    exit()
+
+# Seleccionar columnas
+X = datos[["Largo_Petalo", "Ancho_Petalo"]]
+y = datos["Tipo_Flor"]
+
+print("\nPrimeras filas del conjunto de datos:")
+print(datos.head())
+
+# --- NORMALIZACIÓN Y DIVISIÓN ---
+escalador = StandardScaler()
+X_norm = escalador.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X_norm, y, test_size=0.3, stratify=y, random_state=42
+)
+
+print("\nDatos divididos.")
+
+# ENTRENAMIENTO 
+modelo = KNeighborsClassifier(n_neighbors=k)
+modelo.fit(X_train, y_train)
+print(f"Modelo KNN entrenado con k = {k}")
+
+# PREDICCIONES
+y_pred = modelo.predict(X_test)
+
+# MÉTRICAS
+print("\n=== MÉTRICAS DEL MODELO ===")
+print(classification_report(y_test, y_pred, digits=4))
+
+# DIAGRAMA DE DISPERSIÓN 
+plt.figure(figsize=(8,6))
+for tipo in datos["Tipo_Flor"].unique():
+    subset = datos[datos["Tipo_Flor"] == tipo]
+    plt.scatter(subset["Largo_Petalo"], subset["Ancho_Petalo"], label=tipo)
+
+plt.title(f"Clasificación KNN de Flores (k = {k})")
+plt.xlabel("Largo del Pétalo")
+plt.ylabel("Ancho del Pétalo")
+plt.legend()
+plt.grid(True)
+plt.tight_layout()
+plt.show()
+
+print("Funciona.")
