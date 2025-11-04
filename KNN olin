@@ -1,0 +1,39 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+
+X = np.array([
+    [1, 1],
+    [2, 1],
+    [4, 3],
+    [5, 4]
+])
+
+K = 2 
+
+print(f"Los datos de entrada son {X.shape[0]} puntos. El algoritmo busca K={K} clústeres.\n")
+
+kmeans = KMeans(n_clusters=K, random_state=0, n_init='auto')
+
+kmeans.fit(X)
+
+etiquetas = kmeans.labels_
+
+centroides = kmeans.cluster_centers_
+
+print("--- Resultados Finales del Modelo ---")
+print("La asignación final de etiquetas es [A, B, C, D]:", etiquetas)
+print("Las coordenadas de los Centroides son:\n", centroides)
+
+plt.figure(figsize=(8, 6))
+plt.title(f'K-Means: Agrupamiento Final (K={K})')
+
+plt.scatter(X[:, 0], X[:, 1], c=etiquetas, s=100, cmap='viridis', label='Puntos')
+
+plt.scatter(centroides[:, 0], centroides[:, 1], marker='X', s=250, c='red', label='Centroides')
+
+plt.xlabel('Eje X')
+plt.ylabel('Eje Y')
+plt.legend()
+plt.grid(True)
+plt.show()
