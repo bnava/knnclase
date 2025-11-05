@@ -1,0 +1,57 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import classification_report
+
+url_file = './data/dataset_flores_ruido.xlsx'
+k_vecinos = 3
+
+df = pd.read_excel(url_file)
+X = df[['Largo_Petalo', 'Ancho_Petalo']]
+y = df['Tipo_Flor']
+
+scaler = StandardScaler()
+X_scaled = scaler.fit_transform(X)
+
+X_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.3, random_state=42)
+
+knn = KNeighborsClassifier(n_neighbors=k_vecinos)
+knn.fit(X_train, y_train)
+
+patrones_entrada = np.array([
+    [5.1235, 6.8832],
+    [4.9842, 7.8921],
+    [6.1213, 4.1235],
+    [2.3123, 8.1231]
+])
+
+patrones_escalados = scaler.transform(patrones_entrada)
+predicciones = knn.predict(patrones_escalados)
+
+for i, (p, pred) in enumerate(zip(patrones_entrada, predicciones)):
+    print(f"P{i+1}: Largo={p[0]:.4f}, Ancho={p[1]:.4f} -> Clasificado como: {pred}")
+
+plt.figure(figsize=(10, 6))
+scatter = plt.scatter(X['Largo_Petalo'], X['Ancho_Petalo'],
+                      c=pd.factorize(y)[0], cmap='viridis', s=50)
+plt.scatter(patrones_entrada[:, 0], patrones_entrada[:, 1],
+            marker='X', s=200, color='red', label='Nuevos Patrones')
+plt.xlabel('Largo_Petalo')
+plt.ylabel('Ancho_Petalo')
+plt.title(f'Diagrama de Dispersión de Flores (k={k_vecinos})')
+legend1 = plt.legend(*scatter.legend_elements(), title="Tipo_Flor", loc="lower right")
+plt.gca().add_artist(legend1)
+plt.legend(loc="upper left")
+plt.grid(True)
+plt.show()
+
+y_pred = knn.predict(X_test)
+reporte = classification_report(y_test, y_pred, zero_division=0, output_dict=True)
+
+print("Clase           Precisión     Sensibilidad      F1-score")
+for clase, metricas in reporte.items():
+    if clase not in ['accuracy', 'macro avg', 'weighted avg']:
+        print(f"{clase:<15} {metricas['precision']:10.2f} {metricas['recall']:15.2f} {metricas['f1-score']:10.2f}")
