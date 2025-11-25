@@ -1,0 +1,53 @@
+📘 Instrucciones de instalación de librerías para el proyecto:
+======================================================
+
+🔹 Paso 1: Activa tu entorno virtual (si lo usas)
+--------------------------------------------------
+Ejemplo:
+(Windows)
+    venv\Scripts\activate
+
+🔹 Paso 2: Instala las dependencias necesarias
+--------------------------------------------------
+Copia y pega este comando en tu terminal:
+
+pip install pandas numpy matplotlib networkx geopandas contextily shapely openpyxl
+
+🔹 Paso 3: Verifica que se instalaron correctamente
+--------------------------------------------------
+Ejecuta este comando:
+
+python -m pip list
+
+Y asegúrate de ver las siguientes librerías en la lista:
+
+- pandas
+- numpy
+- matplotlib
+- networkx
+- geopandas
+- contextily
+- shapely
+- openpyxl
+
+🔹 Descripción rápida de las librerías
+--------------------------------------------------
+pandas       → Leer archivos Excel y manejar datos tabulares.
+numpy        → Cálculos numéricos y manejo de matrices.
+matplotlib   → Visualización y gráficos.
+networkx     → Creación y análisis de redes o grafos (rutas).
+geopandas    → Manejo de datos geográficos.
+contextily   → Mapas base (como OpenStreetMap).
+shapely      → Geometría de puntos, líneas y polígonos.
+openpyxl     → Lectura de archivos Excel (.xlsx).
+
+🔹 Paso 4 (opcional): Actualiza pip
+--------------------------------------------------
+Si te da errores al instalar algo, ejecuta:
+
+python -m pip install --upgrade pip
+
+🔹 Paso 5: Manera de correr
+--------------------------------------------------
+
+python Proyecto.py
